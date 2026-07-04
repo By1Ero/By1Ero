@@ -1,5 +1,5 @@
 
-print("Anti Cheat Bypass Loading...")
+print("Bypass Loading...")
 
 local mt = getrawmetatable(game)
 local oldnc = mt.__namecall
@@ -58,7 +58,7 @@ end
 
 print("✅ Bypassed")
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "By1Ero Bypass",
-    Text = "Anti Cheat Bypassed",
-    Duration = 10
+    Title = "By1Ero",
+    Text = "✅ Bypassed",
+    Duration = 8
 })
