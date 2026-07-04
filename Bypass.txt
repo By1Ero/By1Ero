@@ -1,0 +1,64 @@
+
+print("Anti Cheat Bypass Loading...")
+
+local mt = getrawmetatable(game)
+local oldnc = mt.__namecall
+local oldidx = mt.__index
+
+setreadonly(mt, false)
+
+mt.__namecall = newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    local args = {...}
+    local argStr = tostring(args[1] or "")
+
+    if method == "Kick" or method == "kick" or string.find(argStr, "Ban") or string.find(argStr, "Kick") or string.find(argStr, "AntiCheat") or string.find(argStr, "Report") then
+        warn("[By1Ero] Blocked!")
+        return task.wait(9e9)
+    end
+
+    if method == "FireServer" then
+        if string.find(argStr, "Ban") or string.find(argStr, "Report") or string.find(argStr, "Kick") or string.find(argStr, "Detect") then
+            return nil
+        end
+    end
+
+    return oldnc(self, ...)
+end)
+
+mt.__index = newcclosure(function(self, key)
+    if key == "Kick" then
+        return function() warn("Kick blocked!") end
+    end
+    return oldidx(self, key)
+end)
+
+setreadonly(mt, true)
+
+pcall(function()
+    hookfunction(game.Players.LocalPlayer.Kick, function() end)
+    hookfunction(game:GetService("LogService").MessageOut, function() end)
+end)
+
+local oldRequire = require
+require = function(a)
+    if tostring(a):find("Anti") or tostring(a):find("Detect") or tostring(a):find("Byfron") then
+        return function() end
+    end
+    return oldRequire(a)
+end
+
+for _, v in pairs(game:GetDescendants()) do
+    if v:IsA("RemoteEvent") or v:IsA("RemoteFunction") then
+        if v.Name:find("Ban") or v.Name:find("Kick") or v.Name:find("Report") then
+            pcall(v.Destroy, v)
+        end
+    end
+end
+
+print("✅ Bypassed")
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "By1Ero Bypass",
+    Text = "Anti Cheat Bypassed",
+    Duration = 10
+})
